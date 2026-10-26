@@ -20,6 +20,8 @@ metadata:
 
 # PPT Master Skill
 
+> **Local house rules (deck-house-rules):** before planning images or decoration load the skill `preza:deck-house-rules` (Claude: Skill tool; Codex: read the path `deck_house_rules` from the preza project's runtime.json) — slide images come from Codex `$imagegen`; highlights are native accent-outlined shapes.
+
 PPT Master is a routed presentation workflow. This entry owns global execution discipline and route selection only; each selected route owns its procedure.
 
 ## Mandatory Load Order

@@ -1,5 +1,7 @@
 # Executor Flat and Shared Core
 
+> **Local house rule (deck-house-rules):** highlight numbers, labels and titles with a native accent-outlined shape without fill, never with glow ellipses or radial halos — §2 of `preza:deck-house-rules`.
+
 Always-loaded Executor authority for flat SVG page authoring, shared by Default and Quick. Executor builds the finished pages on the plan's structure: it receives the blueprint (§2), owns every decision judged on the canvas — carrier mix, geometry, composition, hierarchy, treatment — and draws from the expression vocabulary in the Page Expression Core. Items marked `Default only` bind to the persisted Design Spec / `spec_lock.md`. Quick applies the same craft to the transient anchors from [`quick-generate.md`](../workflows/profiles/quick-generate.md) §2; its own pacing, single final checker, and export replace the Default gates and §6.
 
 **Conditional branch routing**: evaluate every trigger once over the whole roster before P01 (Default: §IX; Quick: the frozen transient roster). Read the triggered modules then, in one batch, so that reading stays out of the page loop. A page that reaches a capability the sweep did not foresee reads its module at that moment, before that page's first SVG line.

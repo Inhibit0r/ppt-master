@@ -6,6 +6,8 @@ Role definition for the **AI image generation path**: turn each active `Acquire 
 
 **Trigger**: the Default resource list contains `Acquire Via: ai` or `slice`, or Quick has resolved a required AI/sliced image in active context.
 
+> **Local house rule (deck-house-rules):** the host plans AI images, a fresh host subagent reviews the plan when the deck's level requires it, and Codex `$imagegen` generates them — follow §1 of `preza:deck-house-rules`.
+
 ---
 
 ## 1. Core Principle — Maximize AI Image Capability in Service of the Deck
