@@ -31,7 +31,8 @@ jobs:
     permissions:
       contents: read
     outputs:
-      result: ${{ steps.result.outputs.result }}
+      # итог — выражением по исходу шагов: код upstream в шаге контракта не может его переписать
+      result: ${{ steps.merge.outputs.state == 'merged' && (steps.contract.outcome == 'success' && 'ok' || 'contract') || steps.merge.outputs.state || 'failed' }}
       tag: ${{ steps.merge.outputs.tag }}
       tree: ${{ steps.merge.outputs.tree }}
     steps:
@@ -68,17 +69,6 @@ jobs:
         run: |
           pip install --quiet -r requirements.txt
           python tools/preza_contract.py --check --smoke
-      - name: Итог проверки
-        id: result
-        if: always()
-        env:
-          STATE: ${{ steps.merge.outputs.state }}
-          CONTRACT: ${{ steps.contract.outcome }}
-        run: |
-          r="${STATE:-failed}"
-          if [ "$r" = merged ]; then [ "$CONTRACT" = success ] && r=ok || r=contract; fi
-          echo "result=$r" >> "$GITHUB_OUTPUT"
-          echo "итог: $r"
 
   push:
     needs: merge
