@@ -1,0 +1,147 @@
+# Догоняет релизы hugohe3/ppt-master: слияние без force push, контракт preza, отчёт в issue.
+# Код upstream исполняется только в задании merge без права записи; push заново сливает тег и сверяет дерево.
+name: sync-upstream
+
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Тег upstream vX.Y.Z (пусто — последний релиз)'
+        required: false
+        default: ''
+      target_branch:
+        description: 'Ветка-цель'
+        required: false
+        default: 'preza'
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+env:
+  TARGET: ${{ inputs.target_branch || 'preza' }}
+  TAG_IN: ${{ inputs.tag }}
+  UPSTREAM: https://github.com/hugohe3/ppt-master
+
+jobs:
+  merge:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    outputs:
+      result: ${{ steps.result.outputs.result }}
+      tag: ${{ steps.merge.outputs.tag }}
+      tree: ${{ steps.merge.outputs.tree }}
+    steps:
+      - name: Проверить входы
+        run: |
+          [[ "$TARGET" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "недопустимая ветка: $TARGET"; exit 1; }
+          [[ -z "$TAG_IN" || "$TAG_IN" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "недопустимый тег: $TAG_IN"; exit 1; }
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Слить релиз upstream
+        id: merge
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch --quiet "$UPSTREAM" '+refs/tags/*:refs/tags/*'
+          tag="${TAG_IN:-$(git tag -l 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1 || true)}"
+          echo "tag=${tag:-unknown}" >> "$GITHUB_OUTPUT"
+          if [ -z "$tag" ]; then echo "state=no-tags" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if git merge-base --is-ancestor "$tag" HEAD; then echo "state=noop" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if ! git merge --no-edit "$tag"; then git merge --abort; echo "state=conflict" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "tree=$(git rev-parse 'HEAD^{tree}')" >> "$GITHUB_OUTPUT"
+          echo "state=merged" >> "$GITHUB_OUTPUT"
+      - name: Контракт preza и smoke
+        id: contract
+        if: steps.merge.outputs.state == 'merged'
+        continue-on-error: true
+        run: |
+          pip install --quiet -r requirements.txt
+          python tools/preza_contract.py --check --smoke
+      - name: Итог проверки
+        id: result
+        if: always()
+        env:
+          STATE: ${{ steps.merge.outputs.state }}
+          CONTRACT: ${{ steps.contract.outcome }}
+        run: |
+          r="${STATE:-failed}"
+          if [ "$r" = merged ]; then [ "$CONTRACT" = success ] && r=ok || r=contract; fi
+          echo "result=$r" >> "$GITHUB_OUTPUT"
+          echo "итог: $r"
+
+  push:
+    needs: merge
+    if: needs.merge.outputs.result == 'ok'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET }}
+          fetch-depth: 0
+      - name: Повторить слияние, сверить дерево и запушить
+        env:
+          TAG: ${{ needs.merge.outputs.tag }}
+          TREE: ${{ needs.merge.outputs.tree }}
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch --quiet "$UPSTREAM" "+refs/tags/$TAG:refs/tags/$TAG"
+          git merge --no-edit "$TAG"
+          [ "$(git rev-parse 'HEAD^{tree}')" = "$TREE" ] || { echo "tree-mismatch: дерево отличается от проверенного"; exit 1; }
+          git push origin "HEAD:refs/heads/$TARGET"
+
+  report:
+    needs: [merge, push]
+    if: always()
+    runs-on: ubuntu-24.04
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      MERGE_JOB: ${{ needs.merge.result }}
+      PUSH_JOB: ${{ needs.push.result }}
+      RESULT: ${{ needs.merge.outputs.result }}
+      TAG: ${{ needs.merge.outputs.tag }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - name: Закрыть или открыть issue
+        run: |
+          set -euo pipefail
+          if [ "$MERGE_JOB" != success ]; then r=failed
+          elif [ "$RESULT" = ok ] && [ "$PUSH_JOB" != success ]; then r=push-failed
+          else r="${RESULT:-failed}"; fi
+          tag="${TAG:-unknown}"
+          prefix="sync $TARGET "
+          list_open() {
+            gh issue list --repo "$GITHUB_REPOSITORY" --state open --limit 100 --json number,title \
+              --jq ".[] | select(.title | startswith(\"$prefix\")) | [.number, .title] | @tsv"
+          }
+          if [ "$r" = ok ] || { [ "$r" = noop ] && [ -z "$TAG_IN" ]; }; then
+            list_open | while IFS=$'\t' read -r n t; do
+              gh issue close "$n" --repo "$GITHUB_REPOSITORY" --comment "Восстановлено на $tag: $RUN_URL"
+            done
+            exit 0
+          fi
+          [ "$r" = noop ] && exit 0
+          title="sync $TARGET $tag: $r"
+          n="$(list_open | awk -F'\t' -v t="$title" '$2 == t { print $1; exit }')"
+          if [ -n "$n" ]; then
+            gh issue comment "$n" --repo "$GITHUB_REPOSITORY" --body "Повтор: $RUN_URL"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" \
+              --body "Синхронизация с upstream не прошла: $r. Ветка $TARGET не изменилась. Прогон: $RUN_URL. Восстановление — tools/README.md."
+          fi

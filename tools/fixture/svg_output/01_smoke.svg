@@ -1,0 +1,6 @@
+<svg lang="en" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <rect x="0" y="0" width="1280" height="720" fill="#FFFFFF"/>
+  <rect x="80" y="200" width="520" height="320" rx="16" fill="#E8EEF6"/>
+  <text x="80" y="120" font-family="Calibri" font-size="44" fill="#1F2A44">Smoke test</text>
+  <text x="110" y="280" font-family="Calibri" font-size="24" fill="#1F2A44">preza contract fixture</text>
+</svg>
