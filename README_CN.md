@@ -13,7 +13,9 @@
 
 [English](./README.md) | 中文
 
-> 🆕 **作为投融资领域从业者（注册会计师 · 资产评估师 · 咨询工程师（投资）），我结合自己的专业知识和项目经验，制作了一个工具网站：[建设项目经济评价](https://cs.hehugo.com/)**——输入项目数据，在线完成全套财务测算：投资、收入、成本、还本付息、利润、现金流量、资产负债等报表，以及内部收益率、净现值、敏感性和盈亏平衡分析，可导出 Excel / Word 报表。适用于风电、光伏、储能等能源类建设项目，其他项目可用通用型评价。网站目前处于初步试用阶段，前 100 名注册送 3 次运算，之后注册送 1 次。
+> 💼 **我正在寻找新的发展机会。** 投融资背景（CPA · CPV · 咨询工程师），也做 AI 工具与开源产品，各类机会都欢迎交流：[heyug3@gmail.com](mailto:heyug3@gmail.com)，更多见 [hehugo.com](https://www.hehugo.com/)。
+
+> 🆕 **我做了一个建设项目经济评价网站：[cs.hehugo.com](https://cs.hehugo.com/)**——风光储模板现已向所有用户开放，注册即可使用（某商业软件同类模块售价 10 万元）。
 
 ## ❤️ 赞助
 
@@ -104,7 +106,7 @@
 
 > [!IMPORTANT]
 > ### 这是一个工具，不是一个许愿池
-> `harness + model = agent`——PPT Master 只负责工作流，产出上限由模型决定。推荐 **Kimi K3（或 Claude）大上下文窗口（~100 万 token）+ AI 生图（`gpt-image-2` 或 Google `gemini-nano-banana-2.1`）**；其他模型能跑通流程，但有质量差距。
+> `harness + model = agent`——PPT Master 只负责工作流，产出上限由模型决定。推荐 **Kimi K3（或 Claude）大上下文窗口（~100 万 token）+ AI 生图（`gpt-image-2.5-sunburst` 或 Google `gemini-nano-banana-2.1`）**；其他模型能跑通流程，但有质量差距。
 >
 > 也别指望一把就拿到完美成品。它的价值是帮你把大部分枯燥的活儿干掉，剩下的打磨交给你——做原生可编辑的 PPT，本就是为了让你接着改，而不是甩给你一张改不动的图。模型越便宜，要补的人工就越多；效果不理想，先升级模型，再对照[快速入门](./docs/zh/getting-started.md)和[示例工程](https://hugohe3.github.io/ppt-master-examples/)检查用法。
 
@@ -163,7 +165,7 @@
 
 ### 1. 前置条件
 
-**只需安装 [Python](https://www.python.org/downloads/) 3.10+。** 其余依赖在第 3 步下载好项目后，用一行 `pip install -r requirements.txt` 装齐。
+**只需安装 [Python](https://www.python.org/downloads/) 3.10–3.14。** 其余依赖在第 3 步下载好项目后，用一行 `pip install -r requirements.txt` 装齐。
 
 <details>
 <summary><strong>Windows</strong> — 请看专门的<a href="./docs/zh/windows-installation.md">手把手安装指南</a> ⚠️</summary>
@@ -215,7 +217,7 @@ PPT Master 在**任何具备 agent 能力**（可读写文件、执行命令、�
 | **IDE 插件 / 扩展** | [Claude Code](https://claude.ai/code)（VS Code / JetBrains 扩展）、[GitHub Copilot](https://github.com/features/copilot)、[Cline](https://cline.bot/)、通义灵码 等 | 装在 VS Code / JetBrains 等宿主里使用 |
 | **CLI agent** | [Claude Code](https://claude.ai/code) CLI、[Codex CLI](https://github.com/openai/codex)、Gemini CLI 等 | 终端里运行，适合脚本化 / 远程 / 服务器场景 |
 
-> **模型推荐**：追求最佳效果，语言模型选 **[Kimi K3](https://www.kimi.com/code/?aff=ppt-master)**（或 Claude）驱动流程，搭配 AI 生图 —— **`gpt-image-2`**（OpenAI）或 **`gemini-nano-banana-2.1`**（Google）。本项目赞助商 Kimi Code 支持按量调用，很适合上手。
+> **模型推荐**：追求最佳效果，语言模型选 **[Kimi K3](https://www.kimi.com/code/?aff=ppt-master)**（或 Claude）驱动流程，搭配 AI 生图 —— **`gpt-image-2.5-sunburst`**（OpenAI）或 **`gemini-nano-banana-2.1`**（Google）。本项目赞助商 Kimi Code 支持按量调用，很适合上手。
 
 **🔑 想用 Claude / GPT / Gemini 但还没有渠道？** 本项目赞助商 **[PackyCode](https://www.packyapi.ai/register?aff=ppt-master)**、**[APIKEY.FAN](https://apikey.fan/register?aff=PPT-MASTER)** 与 **[RunAPI](https://runapi.host/register?aff=WMLJ)** 均支持按量调用 Claude、GPT、Gemini 等主流模型，无需订阅、支持国内支付，并为本项目用户提供专属优惠（详情见页首）。
 
@@ -321,7 +323,7 @@ AI 全程处理——内容分析、视觉设计、SVG 生成、PPTX 导出。
 
 非用户自带图片有两条路径，可在同一份 deck 里按图混用：
 
-**A) AI 生图** — Agent host 提供原生生图工具时可直接使用；也可通过 `image_gen.py` 配置 `IMAGE_BACKEND` 和供应商 `*_API_KEY`。host-native 生图不需要另配供应商生图 API Key，直接要求 Agent 使用自身生图工具即可。`python3 skills/ppt-master/scripts/image_gen.py --list-backends` 查看供应商后端清单。`gpt-image-2` 目前综合质量最佳。
+**A) AI 生图** — Agent host 提供原生生图工具时可直接使用；也可通过 `image_gen.py` 配置 `IMAGE_BACKEND` 和供应商 `*_API_KEY`。host-native 生图不需要另配供应商生图 API Key，直接要求 Agent 使用自身生图工具即可。`python3 skills/ppt-master/scripts/image_gen.py --list-backends` 查看供应商后端清单。OpenAI 后端当前默认 `gpt-image-2.5-sunburst`。
 
 **B) 网络图片搜索** — `image_search.py`。**零配置**可用；建议配置 `PEXELS_API_KEY` / `PIXABAY_API_KEY`（都免费申请）以获得稳定的高质量结果：
 
@@ -428,8 +430,6 @@ PPT Master 目前主要由我开发维护。每个新模板、Bug 修复、文�
 <a href="https://paypal.me/hugohe3"><img src="https://img.shields.io/badge/PayPal-赞助-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="通过 PayPal 赞助" /></a>
 
 <img src="docs/assets/alipay-qr.jpg" alt="支付宝收款码" width="220" />
-
-> 🎁 支付宝赞助 100 元起（100 元的整数倍），付款时备注 [建设项目经济评价](https://cs.hehugo.com/) 网站的注册邮箱，即可获得该网站的计算点数。每 100 元对应 20 点（每次运算 1 点）。
 
 ---
 

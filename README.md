@@ -13,7 +13,9 @@
 
 English | [中文](./README_CN.md)
 
-> 🆕 **As a finance professional (CPA · CPV · Consulting Engineer (Investment)), I drew on my expertise and project experience to build a tool website: [Construction Project Economic Evaluation](https://cs.hehugo.com/)** (in Chinese) — enter your project data and get a full financial evaluation online: investment, revenue, cost, debt service, profit, cash flow and balance sheet statements, plus IRR, NPV, sensitivity and break-even analysis, exportable to Excel / Word. Built for energy projects such as wind, solar and storage, with a general-purpose mode for other projects. The site is in an early trial phase; the first 100 accounts get 3 free runs, later accounts get 1.
+> 💼 **I'm open to new opportunities.** Investment background (CPA · CPV · Consulting Engineer), also building AI tools and open source. Happy to talk about any opportunity: [heyug3@gmail.com](mailto:heyug3@gmail.com) · [hehugo.com](https://www.hehugo.com/).
+
+> 🆕 **I built a construction project economic evaluation site: [cs.hehugo.com](https://cs.hehugo.com/)** (in Chinese) — the wind, solar and storage templates are now open to everyone; just register and use them (a comparable module in one commercial package sells for ¥100,000).
 
 ## ❤️ Sponsors
 
@@ -104,7 +106,7 @@ Why you'd choose it, and where it isn't the right fit → [Why PPT Master](./doc
 
 > [!IMPORTANT]
 > ### This is a tool, not a wishing well
-> `harness + model = agent` — PPT Master only owns the workflow; the model sets the ceiling. Recommended: **Kimi K3 (or Claude) with a large context window (~1M tokens) + AI image generation (`gpt-image-2` or Google `gemini-nano-banana-2.1`)**; other models can run the pipeline, with a quality gap.
+> `harness + model = agent` — PPT Master only owns the workflow; the model sets the ceiling. Recommended: **Kimi K3 (or Claude) with a large context window (~1M tokens) + AI image generation (`gpt-image-2.5-sunburst` or Google `gemini-nano-banana-2.1`)**; other models can run the pipeline, with a quality gap.
 >
 > And don't expect a finished, perfect deck in one shot. The tool's value is taking most of the tedious work off your plate; the polishing that's left is yours — a natively editable deck exists precisely so you can keep working on it, not a flat image you can't touch. The cheaper the model, the more there is to do; if results disappoint, upgrade the model first, then check your usage against [Getting Started](./docs/getting-started.md) and the [example projects](https://hugohe3.github.io/ppt-master-examples/).
 
@@ -163,7 +165,7 @@ Knowing how to use Python and AI agents will matter more and more, and this proj
 
 ### 1. Prerequisites
 
-**All you need to install is [Python](https://www.python.org/downloads/) 3.10+.** Everything else comes with one line — `pip install -r requirements.txt` — after you download the project in Step 3.
+**All you need to install is [Python](https://www.python.org/downloads/) 3.10–3.14.** Everything else comes with one line — `pip install -r requirements.txt` — after you download the project in Step 3.
 
 <details>
 <summary><strong>Windows</strong> — see the dedicated <a href="./docs/windows-installation.md">step-by-step guide</a> ⚠️</summary>
@@ -215,7 +217,7 @@ Never used one of these? Don't worry — in this project they play exactly one r
 | **IDE plugin / extension** | [Claude Code](https://claude.ai/code) (VS Code / JetBrains extension), [GitHub Copilot](https://github.com/features/copilot), [Cline](https://cline.bot/), etc. | Installed inside hosts like VS Code or JetBrains |
 | **CLI agent** | [Claude Code](https://claude.ai/code) CLI, [Codex CLI](https://github.com/openai/codex), Gemini CLI, etc. | Runs in the terminal; suits scripting, remote, or server use |
 
-> **Model recommendation**: for the best results, use **[Kimi K3](https://www.kimi.com/code/?aff=ppt-master)** (or Claude) to drive the pipeline, paired with AI image generation — **`gpt-image-2`** (OpenAI) or **`gemini-nano-banana-2.1`** (Google). Kimi Code, the project sponsor, is a great pick for pay-as-you-go access.
+> **Model recommendation**: for the best results, use **[Kimi K3](https://www.kimi.com/code/?aff=ppt-master)** (or Claude) to drive the pipeline, paired with AI image generation — **`gpt-image-2.5-sunburst`** (OpenAI) or **`gemini-nano-banana-2.1`** (Google). Kimi Code, the project sponsor, is a great pick for pay-as-you-go access.
 
 **🔑 Want to use Claude / GPT / Gemini but don't have access yet?** Project sponsors **[PackyCode](https://www.packyapi.ai/register?aff=ppt-master)**, **[APIKEY.FAN](https://apikey.fan/register?aff=PPT-MASTER)** and **[RunAPI](https://runapi.host/register?aff=WMLJ)** offer pay-as-you-go access to Claude, GPT, Gemini and more — no subscription required, with exclusive discounts for our users (details at the top of this page).
 
@@ -316,7 +318,7 @@ Whatever you state explicitly is followed; whatever you leave unspecified the ag
 
 Two paths for non-user images, mixable per image in the same deck:
 
-**A) AI generation** — use the agent host's native image tool when available, or `image_gen.py` with `IMAGE_BACKEND` plus the provider's `*_API_KEY`. Host-native generation needs no separate provider image API key; ask the agent to use its own image tool. Run `python3 skills/ppt-master/scripts/image_gen.py --list-backends` for the configured-provider path. `gpt-image-2` is currently the best default.
+**A) AI generation** — use the agent host's native image tool when available, or `image_gen.py` with `IMAGE_BACKEND` plus the provider's `*_API_KEY`. Host-native generation needs no separate provider image API key; ask the agent to use its own image tool. Run `python3 skills/ppt-master/scripts/image_gen.py --list-backends` for the configured-provider path. `gpt-image-2.5-sunburst` is the current OpenAI default.
 
 **B) Web image search** — `image_search.py`. **Zero-config works**; configure `PEXELS_API_KEY` / `PIXABAY_API_KEY` (both free) for consistently higher-quality results:
 
@@ -423,8 +425,6 @@ If PPT Master has been helpful to you, individual support of any amount helps ke
 <a href="https://paypal.me/hugohe3"><img src="https://img.shields.io/badge/PayPal-Sponsor-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="Sponsor via PayPal" /></a>
 
 <img src="docs/assets/alipay-qr.jpg" alt="Alipay QR Code" width="220" />
-
-> 🎁 Sponsor ¥100 or more (in multiples of ¥100) via Alipay and put the email you registered on [Construction Project Economic Evaluation](https://cs.hehugo.com/) in the payment note to receive compute credits on that site. Every ¥100 earns 20 credits (one run costs 1 credit).
 
 ---
 
